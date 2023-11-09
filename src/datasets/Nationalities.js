@@ -1,10 +1,10 @@
 import { Dataset } from '../abstracts/Dataset'
 
 
-export class Genres extends Dataset {
+export class Nationalities extends Dataset {
 
 
-	values = [
+	static values = [
 		'Afghan',
 		'Albanian',
 		'Algerian',

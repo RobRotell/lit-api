@@ -2,10 +2,10 @@
 import { Dataset } from '../abstracts/Dataset'
 
 
-export class Characters extends Dataset {
+export class Plots extends Dataset {
 
 
-	values = [
+	static values = [
 		'put their differences aside to save their neighborhood from a common threat.',
 		'are stranded on a deserted island.',
 		'are trapped in an elevator and must work together to escape.',

@@ -1,7 +1,7 @@
 export class Dataset {
 
 
-	values = []
+	static values = []
 
 
 	/**
@@ -9,7 +9,7 @@ export class Dataset {
 	 *
 	 * @return {string}
 	 */
-	getRandomValue() {
+	static getRandomValue() {
 		return this.values[ Math.floor( Math.random() * this.values.length ) ]
 	}
 
@@ -22,7 +22,7 @@ export class Dataset {
 	 *
 	 * @return {string}
 	 */
-	getSkewedRandomValue( skewValue, count ) {
+	static getSkewedRandomValue( skewValue, count ) {
 		const values = this.values
 
 		for( let i = 0; i < count; ++i ) {

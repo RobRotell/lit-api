@@ -1,27 +1,27 @@
 import OpenAI from 'openai'
+import { OpenAi } from '../clients/OpenAi'
+import { Prompts } from '../controllers/Prompts'
 
 
 export const createMovie = {
 	method: 'POST',
 	path: '/create-movie',
 	handler: async ( req, h ) => {
-		const openai = new OpenAI({
-			apiKey: process.env.OPENAI_API_KEY,
-		})
 
-		const thing = await openai.images.generate({
-			model: 'dall-e-3',
-			prompt: 'Photo of a spy riding on an elephant, floating in space. 70mm. black and white. film grain',
-			quality: 'hd',
-			size: '1024x1024',
-			style: 'vivid',
-			user: process.env.OPENAI_API_USER,
-		})
+		const prompts = Prompts.generatePrompts()
+
+		const title = await OpenAi.generateChatCompletion( prompts.title )
+		const author = await OpenAi.generateChatCompletion( prompts.author )
+		const tagline = await OpenAi.generateChatCompletion( prompts.tagline )
+
+		const image = await OpenAi.generateImage( prompts.cover )
 
 		return {
-			thing,
-			// req,
-			// h
+			title,
+			author,
+			tagline,
+			image,
+			prompts,
 		}
 	}
 }

@@ -4,7 +4,7 @@ import { Dataset } from '../abstracts/Dataset'
 export class Characters extends Dataset {
 
 
-	values = [
+	static values = [
 		'A baby',
 		'A cat',
 		'A celebrity',
