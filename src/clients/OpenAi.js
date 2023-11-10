@@ -16,7 +16,7 @@ export class OpenAi {
 	 * @throws {Error} Invalid/unexpected response from OpenAI's side
 	 *
 	 * @param {string} prompt
-	 * @return {string} Chat completion
+	 * @return {Promise<string>} Chat completion
 	 */
 	static async generateChatCompletion( prompt ) {
 		const res = await client.chat.completions.create({
@@ -32,10 +32,7 @@ export class OpenAi {
 		const completion = res?.choices[0]?.message?.content
 
 		if ( 'string' !== typeof completion || !completion.length ) {
-			console.warn({
-				error: 'Invalid response from OpenAI',
-				res
-			})
+			console.warn({ res })
 
 			throw new Error( 'Invalid response from OpenAI' )
 		}
@@ -51,7 +48,7 @@ export class OpenAi {
 	 * @throws {Error} OpenAI returned malformed URL
 	 *
 	 * @param {string} prompt
-	 * @return {string} URL of image on OpenAI's servers
+	 * @return {Promise<string>} URL of image on OpenAI's servers
 	 */
 	static async generateImage( prompt ) {
 		const res = await client.images.generate({
@@ -66,10 +63,7 @@ export class OpenAi {
 		let imageUrl = res?.data[0]?.url
 
 		if ( 'string' !== typeof imageUrl || !imageUrl.length ) {
-			console.warn({
-				error: 'Invalid response from OpenAI',
-				res
-			})
+			console.warn({ res })
 
 			throw new Error( 'Invalid response from OpenAI' )
 		}
@@ -78,9 +72,7 @@ export class OpenAi {
 		try {
 			imageUrl = new URL( imageUrl )
 		} catch ( err ) {
-			console.warn({
-				err,
-			})
+			console.warn({ err })
 
 			throw new Error( 'Invalid URL provided by OpenAI' )
 		}

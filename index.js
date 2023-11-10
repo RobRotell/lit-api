@@ -1,34 +1,32 @@
+/* global process, console */
+
+
+import 'dotenv/config'
 import Hapi from '@hapi/hapi'
 
 
-// const Hapi = require('@hapi/hapi');
+// routes
+import { createBook } from './src/routes/create-book'
+
 
 const init = async () => {
 
-    const server = Hapi.server({
-        port: 3000,
-        host: 'localhost'
-    });
+	const server = Hapi.server({
+		host: 'localhost',
+		port: process.env.PORT,
+	})
 
-	server.route({
-        method: 'GET',
-        path: '/',
-        handler: (request, h) => {
+	server.route( createBook )
 
-            return {
-				'test': 'Hello World!'
-			}
-        }
-    });
+	await server.start()
+	console.log( 'Server running on %s', server.info.uri )
+}
 
-    await server.start();
-    console.log('Server running on %s', server.info.uri);
-};
 
-process.on('unhandledRejection', (err) => {
+process.on( 'unhandledRejection', err => {
+	console.log( err )
+	process.exit( 1 )
+})
 
-    console.log(err);
-    process.exit(1);
-});
 
-init();
+init()
