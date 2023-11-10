@@ -1,7 +1,7 @@
 {
 	"name": "lit-api",
 	"version": "0.0.1",
-	"description": "OpenAI-powered book site",
+	"description": "API to generate book authors, taglines, and covers from OpenAI's image tools.",
 	"main": "index.js",
 	"type": "module",
 	"scripts": {
@@ -21,10 +21,15 @@
 	"dependencies": {
 		"@hapi/hapi": "^21.3.2",
 		"@prisma/client": "^5.5.2",
+		"dayjs": "^1.11.10",
 		"dotenv": "^16.3.1",
-		"openai": "^4.17.0"
+		"openai": "^4.17.0",
+		"sharp": "^0.32.6"
 	},
 	"devDependencies": {
-		"nodemon": "^3.0.1"
+		"eslint": "^8.53.0",
+		"eslint-config-prettier": "^9.0.0",
+		"nodemon": "^3.0.1",
+		"prettier": "^3.0.3"
 	}
 }
