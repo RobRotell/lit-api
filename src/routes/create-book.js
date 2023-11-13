@@ -1,7 +1,7 @@
 import { NewBook } from '../models/NewBook'
 
 
-export const createBook = {
+export const routeCreateBook = {
 	method: 'POST',
 	path: '/create-book',
 	handler: async ( req, h ) => {

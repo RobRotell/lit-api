@@ -8,12 +8,13 @@ import { Plots } from '../datasets/Plots'
 import { Nationalities } from '../datasets/Nationalities'
 import dayjs from 'dayjs'
 import { OpenAi } from '../clients/OpenAi'
+import { generateRandomYear } from '../utils/generateYear'
+import { stripLeadingAndTrailingQuotes } from '../utils/stripQuotes'
+import { ImageProcessor } from '../controllers/ImageProcessor'
+import { convertPathToUrl } from '../utils/convertPathToUrl'
 
 
 export class NewBook extends Book {
-
-
-	imageUrl
 
 
 	/**
@@ -24,6 +25,7 @@ export class NewBook extends Book {
 		super()
 
 		this.date = dayjs().format( 'YYYY-MM-DD' )
+		this.releaseYear = generateRandomYear()
 	}
 
 
@@ -33,18 +35,41 @@ export class NewBook extends Book {
 	 * @return {Promise<number>} Book ID
 	 */
 	async create() {
-		const { characters, genre, imageStyle, nationality, plot } = this.createPromptAttributes()
+		this.prompts = this.createPromptAttributes()
+
+		const { characters, genre, imageStyle, nationality, plot } = this.prompts
 
 		// we'll save this to the DB later
 		this.genre = genre
 
+		// generate basic book data
 		this.title = await this.createTitle( genre, plot, characters )
 		this.author = await this.createAuthor( nationality )
 		this.tagline = await this.createTagline( genre, plot, characters )
 
-		// this.imageUrl = this.createCoverImage( imageStyle, genre, plot, characters )
+		// remove leading and trailing quotes that OpenAI *sometimes* adds
+		this.title = stripLeadingAndTrailingQuotes( this.title )
+		this.tagline = stripLeadingAndTrailingQuotes( this.tagline )
 
-		console.log( this )
+		// generate book cover image
+		const openAiImageUrl = await this.createCoverImage( imageStyle, genre, plot, characters )
+
+		// now, let's save and format that image
+		const imageProcessor = new ImageProcessor( openAiImageUrl )
+
+		imageProcessor.setBaseName( this.date, this.prompts )
+
+		// image processor will download image and create JPEG (among other formats) files
+		const jpgFilePaths = await imageProcessor.processImage()
+
+		// now, we need to convert them to URLs to save for DB
+		const jpgFileUrls = {}
+
+		jpgFilePaths.forEach( ( filePath, dimension ) => {
+			jpgFileUrls[ dimension ] = convertPathToUrl( filePath )
+		})
+
+		console.log( JSON.stringify( jpgFileUrls ) )
 
 		return 5
 	}
@@ -121,7 +146,7 @@ export class NewBook extends Book {
 	 * @return {Promise<string>} Book tagline
 	 */
 	async createTagline( genre, plot, characters ) {
-		const prompt = `Create a tagline for a book. This book's genre is ${genre}. This book's plot is: "${characters} ${plot}`
+		const prompt = `You are marketing a newly published book. Create an interesting tagline for this book. This book's genre is ${genre}. This book's plot is: "${characters} ${plot}. The tagline should not contain a colon or semicolon. The tagline should be at least twenty words long.`
 
 		try {
 			return await OpenAi.generateChatCompletion( prompt )
