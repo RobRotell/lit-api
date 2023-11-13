@@ -3,10 +3,12 @@
 
 import 'dotenv/config'
 import Hapi from '@hapi/hapi'
+import inert from '@hapi/inert'
 
 
 // routes
-import { createBook } from './src/routes/create-book'
+import { routeCreateBook } from './src/routes/create-book'
+import { routePublicFiles } from './src/routes/public-files'
 
 
 const init = async () => {
@@ -16,7 +18,11 @@ const init = async () => {
 		port: process.env.PORT,
 	})
 
-	server.route( createBook )
+	// needed to serve public files
+	await server.register( inert )
+
+	server.route( routePublicFiles )
+	server.route( routeCreateBook )
 
 	await server.start()
 	console.log( 'Server running on %s', server.info.uri )
