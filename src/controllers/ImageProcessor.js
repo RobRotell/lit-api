@@ -1,4 +1,3 @@
-import { hashValue } from '../utils/hashValue'
 import got from 'got'
 import sharp from 'sharp'
 import path from 'path'
@@ -29,10 +28,8 @@ export class ImageProcessor {
 	 * @param {string} baseName
 	 */
 	constructor( url, baseName ) {
-		if( 'string' !== typeof url || !url.length ) {
-			throw new TypeError( 'Argument must be a non-empty string.' )
-		}
 
+		// easy URL validation
 		try {
 			const urlObj = new URL( url )
 
@@ -43,22 +40,6 @@ export class ImageProcessor {
 		}
 
 		this.baseImageName = baseName
-	}
-
-
-	/**
-	 * Set base name from arguments
-	 *
-	 * @param {string} prefix Value will be left alone
-	 * @param {string|array} prompts Will be hashed
-	 *
-	 * @return {void}
-	 */
-	setBaseName( prefix, body ) {
-		body = JSON.stringify( body )
-		body = hashValue( body )
-
-		this.baseImageName = `${prefix}-${body}`
 	}
 
 

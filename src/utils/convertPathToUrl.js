@@ -11,5 +11,5 @@ const basePath = path.resolve()
  * @return {string} URL
  */
 export const convertPathToUrl = targetPath => {
-	return targetPath.replace( basePath, process.env.APP_URL )
+	return targetPath.replace( `${basePath}/public`, process.env.APP_URL )
 }

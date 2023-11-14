@@ -15,8 +15,8 @@ model Books {
 	tagline			String
 	author			String
 	release_year	Int 		@db.Year
-	image_urls		String
-	prompts			String
+	image_urls		String 		@db.Text
+	prompts			String 		@db.Text
 }
 
 
