@@ -9,8 +9,6 @@ export class BookForDisplay extends Book {
 	/**
 	 * Constructor
 	 *
-	 * @throws {Error} ID doesn't match a book
-	 *
 	 * @param {number} id
 	 *
 	 */
@@ -24,16 +22,20 @@ export class BookForDisplay extends Book {
 	/**
 	 * Populate attributes from database
 	 *
-	 * @return {void}
+	 * @return {Promise}
 	 */
 	async populateAttributes() {
-		const database = Database.getClient()
+		const dbClient = Database.getClient()
 
-		const record = await database.books.findFirst({
+		const record = await dbClient.books.findFirst({
 			where: {
 				id: this.getAttribute( 'id' )
 			}
 		})
+
+		if( !record ) {
+			throw new Error( 'No book matches provided ID.' )
+		}
 
 		const {
 			id,
@@ -44,7 +46,7 @@ export class BookForDisplay extends Book {
 			author,
 			release_year: releaseYear,
 			image_urls: imageUrls,
-			// prompts
+			prompts
 		} = record
 
 		this
@@ -56,7 +58,7 @@ export class BookForDisplay extends Book {
 			.setAttribute( 'author', author )
 			.setAttribute( 'releaseYear', releaseYear )
 			.setAttribute( 'imageUrls', JSON.parse( imageUrls ) )
-			// .setAttribute( 'prompts', JSON.parse( prompts ) )
+			.setAttribute( 'prompts', JSON.parse( prompts ) )
 	}
 
 

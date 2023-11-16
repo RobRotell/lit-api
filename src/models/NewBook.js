@@ -94,9 +94,9 @@ export class NewBook extends Book {
 	async saveBook() {
 
 		// time to save entry to DB
-		const database = Database.getClient()
+		const dbClient = Database.getClient()
 
-		const record = await database.books.create({
+		const record = await dbClient.books.create({
 			data: {
 				date: this.getAttribute( 'date' ),
 				title: this.getAttribute( 'title' ),

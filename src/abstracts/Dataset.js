@@ -1,3 +1,6 @@
+import { shuffleArray } from '../utils/shuffleArray'
+
+
 export class Dataset {
 
 
@@ -23,11 +26,13 @@ export class Dataset {
 	 * @return {string}
 	 */
 	static getSkewedRandomValue( skewValue, count ) {
-		const values = this.values
+		let values = this.values
 
 		for( let i = 0; i < count; ++i ) {
 			this.values.push( skewValue )
 		}
+
+		values = shuffleArray( values )
 
 		return values[ Math.floor( Math.random() * values.length ) ]
 	}

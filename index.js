@@ -8,6 +8,7 @@ import inert from '@hapi/inert'
 
 // routes
 import { routeCreateBook } from './src/routes/create-book'
+import { routeGetBook } from './src/routes/get-book'
 import { routePublicFiles } from './src/routes/public-files'
 
 
@@ -22,6 +23,7 @@ const init = async () => {
 	await server.register( inert )
 
 	server.route( routePublicFiles )
+	server.route( routeGetBook )
 	server.route( routeCreateBook )
 
 	await server.start()

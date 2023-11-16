@@ -1,4 +1,4 @@
-import { BookForDisplay } from '../models/BookForDisplay'
+import { Bookkeeper } from '../controllers/Bookkeeper'
 import { NewBook } from '../models/NewBook'
 
 
@@ -8,21 +8,23 @@ export const routeCreateBook = {
 	async handler( req, h ) {
 
 		try {
-			const newBook = new NewBook
-			const bookId = await newBook.create()
+			const id = await Bookkeeper.createBook()
 
-			// if all went well, we have a book record ID
-			const bookForDisplay = new BookForDisplay( bookId )
-
-			// todo -- throw error if for some reason book failed to save
-			await bookForDisplay.populateAttributes()
-
-			return bookForDisplay.getAttributes()
+			return {
+				success: true,
+				data: {
+					id
+				}
+			}
 
 		} catch ( err ) {
 			console.warn( err )
+
 			return h.response({
-				err,
+				success: false,
+				data: {
+					error: err.message,
+				}
 			}).code( 500 )
 		}
 	}
