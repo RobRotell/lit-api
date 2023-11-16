@@ -33,7 +33,7 @@ export class NewBook extends Book {
 
 
 	/**
-	 * Create movie
+	 * Create book
 	 *
 	 * @return {Promise<number>} Book ID
 	 */

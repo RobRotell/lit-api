@@ -25,7 +25,7 @@ export class Book {
 
 
 	/**
-	 * Get movie attribute
+	 * Get book attribute
 	 *
 	 * @throws {Error} Invalid attribute
 	 *
@@ -34,7 +34,7 @@ export class Book {
 	 */
 	getAttribute( key ) {
 		if( !this.attributes.has( key ) ) {
-			throw new Error( 'Invalid movie attribute.' )
+			throw new Error( 'Invalid book attribute.' )
 		}
 
 		return this.attributes.get( key )
@@ -42,7 +42,7 @@ export class Book {
 
 
 	/**
-	 * Set movie attribute
+	 * Set book attribute
 	 *
 	 * @param {string} key
 	 * @param {mixed} value
