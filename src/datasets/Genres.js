@@ -1,4 +1,4 @@
-import { Dataset } from '../abstracts/Dataset'
+import { Dataset } from '../abstracts/Dataset.js'
 
 
 export class Genres extends Dataset {

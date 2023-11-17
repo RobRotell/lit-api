@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
-import { Book } from '../abstracts/Book'
-import { Database } from '../clients/Database'
+import { Book } from '../abstracts/Book.js'
+import { Database } from '../clients/Database.js'
 
 
 export class BookForDisplay extends Book {
@@ -22,7 +22,7 @@ export class BookForDisplay extends Book {
 	/**
 	 * Populate attributes from database
 	 *
-	 * @return {Promise}
+	 * @return {Promise<self>}
 	 */
 	async populateAttributes() {
 		const dbClient = Database.getClient()
@@ -59,6 +59,8 @@ export class BookForDisplay extends Book {
 			.setAttribute( 'releaseYear', releaseYear )
 			.setAttribute( 'imageUrls', JSON.parse( imageUrls ) )
 			.setAttribute( 'prompts', JSON.parse( prompts ) )
+
+		return this
 	}
 
 

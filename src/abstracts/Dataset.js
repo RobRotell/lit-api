@@ -1,4 +1,4 @@
-import { shuffleArray } from '../utils/shuffleArray'
+import { shuffleArray } from '../utils/shuffleArray.js'
 
 
 export class Dataset {

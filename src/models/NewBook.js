@@ -1,19 +1,19 @@
 /* global console */
 /* eslint-disable max-len */
 import dayjs from 'dayjs'
-import { Book } from '../abstracts/Book'
-import { Characters } from '../datasets/Characters'
-import { Database } from '../clients/Database'
-import { Genres } from '../datasets/Genres'
-import { ImageProcessor } from '../controllers/ImageProcessor'
-import { ImageStyles } from '../datasets/ImageStyles'
-import { Nationalities } from '../datasets/Nationalities'
-import { OpenAi } from '../clients/OpenAi'
-import { Plots } from '../datasets/Plots'
-import { convertPathToUrl } from '../utils/convertPathToUrl'
-import { generateRandomYear } from '../utils/generateYear'
-import { hashValue } from '../utils/hashValue'
-import { stripLeadingAndTrailingQuotes } from '../utils/stripQuotes'
+import { Book } from '../abstracts/Book.js'
+import { Characters } from '../datasets/Characters.js'
+import { Database } from '../clients/Database.js'
+import { Genres } from '../datasets/Genres.js'
+import { ImageProcessor } from '../controllers/ImageProcessor.js'
+import { ImageStyles } from '../datasets/ImageStyles.js'
+import { Nationalities } from '../datasets/Nationalities.js'
+import { OpenAi } from '../clients/OpenAi.js'
+import { Plots } from '../datasets/Plots.js'
+import { convertPathToUrl } from '../utils/convertPathToUrl.js'
+import { generateRandomYear } from '../utils/generateYear.js'
+import { hashValue } from '../utils/hashValue.js'
+import { stripLeadingAndTrailingQuotes } from '../utils/stripQuotes.js'
 
 
 export class NewBook extends Book {

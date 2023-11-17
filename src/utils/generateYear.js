@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import { getRandomValueFromArray } from './getRandomValue'
+import { getRandomValueFromArray } from './getRandomValue.js'
 
 /**
  * Generate a random year

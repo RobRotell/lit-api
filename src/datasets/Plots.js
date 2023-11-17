@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import { Dataset } from '../abstracts/Dataset'
+import { Dataset } from '../abstracts/Dataset.js'
 
 
 export class Plots extends Dataset {
