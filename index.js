@@ -7,9 +7,10 @@ import inert from '@hapi/inert'
 
 
 // routes
-import { routeCreateBook } from './src/routes/create-book'
-import { routeGetBook } from './src/routes/get-book'
-import { routePublicFiles } from './src/routes/public-files'
+import { routeCreateBook } from './src/routes/create-book.js'
+import { routeGetBook } from './src/routes/get-book.js'
+import { routeGetRandomBook } from './src/routes/get-random-book.js'
+import { routePublicFiles } from './src/routes/public-files.js'
 
 
 const init = async () => {
@@ -24,6 +25,7 @@ const init = async () => {
 
 	server.route( routePublicFiles )
 	server.route( routeGetBook )
+	server.route( routeGetRandomBook )
 	server.route( routeCreateBook )
 
 	await server.start()

@@ -1,47 +1,41 @@
-import { Bookkeeper } from '../controllers/Bookkeeper'
+import { Bookkeeper } from '../controllers/Bookkeeper.js'
+import { ResponseError } from '../models/ResponseError.js'
+import { ResponseSuccess } from '../models/ResponseSuccess.js'
 
 
 export const routeGetBook = {
 	method: 'GET',
 	path: '/get-book/{id?}',
 	async handler( req, h ) {
+		let resBody
 
-		let book
 		let bookId = req.params.id
 
-		if( bookId ) {
-			bookId = parseInt( bookId, 10 )
+		if( !bookId ) {
+			resBody = new ResponseError( 'You must pass a book ID.' )
 
-			if( Number.isNaN( bookId ) ) {
-				return h.response({
-					success: false,
-					data: {
-						error: 'Book ID must be a number.',
-					}
-				}).code( 400 )
-			}
-
-			book = await Bookkeeper.getBookById( bookId )
-
-			if( !book ) {
-				return h.response({
-					success: false,
-					data: {
-						error: 'ID did not match a book.',
-					}
-				}).code( 404 )
-			}
-
-		// otherwise, get random book
-		} else {
-			book = await Bookkeeper.getRandomBook()
+			return h.response( resBody.package() ).code( 400 )
 		}
 
-		return {
-			success: true,
-			data: {
-				book: book.getAttributes()
-			}
+		bookId = parseInt( bookId, 10 )
+
+		if( Number.isNaN( bookId ) ) {
+			resBody = new ResponseError( 'Book ID must be a number.' )
+
+			return h.response( resBody.package() ).code( 400 )
 		}
+
+		const book = await Bookkeeper.getBookById( bookId )
+
+		if( !book ) {
+			resBody = new ResponseError( 'ID did not match a book.' )
+
+			return h.response( resBody.package() ).code( 404 )
+		}
+
+		resBody = new ResponseSuccess
+		resBody.setData( 'book', book.getAttributes() )
+
+		return resBody.package()
 	}
 }

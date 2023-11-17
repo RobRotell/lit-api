@@ -1,7 +1,7 @@
-import { Database } from '../clients/Database'
-import { NewBook } from '../models/NewBook'
-import { getRandomValueFromArray } from '../utils/getRandomValue'
-import { BookForDisplay } from '../models/BookForDisplay'
+import { Database } from '../clients/Database.js'
+import { NewBook } from '../models/NewBook.js'
+import { getRandomValueFromArray } from '../utils/getRandomValue.js'
+import { BookForDisplay } from '../models/BookForDisplay.js'
 
 
 export class Bookkeeper {
@@ -24,25 +24,43 @@ export class Bookkeeper {
 	 * @todo Add limit property
 	 *
 	 * @param {array} excludeIds IDs of books to exclude
-	 * @return {Promise<object>} BookForDisplay
+	 * @return {Promise<object>|false} BookForDisplay
 	 */
-	static async getRandomBook() {
+	static async getRandomBook( excludeIds ) {
 		const dbClient = Database.getClient()
 
-		// Prisma doesn't support getting random records (yet)
-		const bookIds = await dbClient.books.findMany({
+		const queryArgs = {
 			select: {
 				id: true,
 			}
-		})
+		}
 
-		const { id } = getRandomValueFromArray( bookIds )
+		if( Array.isArray( excludeIds ) && excludeIds.length ) {
+			queryArgs.where = {
+				NOT: {
+					id: {
+						in: excludeIds,
+					}
+				}
+			}
+		}
 
-		const book = new BookForDisplay( id )
+		// Prisma doesn't support getting random records (yet)
+		const bookIds = await dbClient.books.findMany( queryArgs )
 
-		await book.populateAttributes()
+		// no books found (e.g. we've excluded all of them)
+		if( !bookIds.length ) {
+			return false
 
-		return book
+		} else {
+			const { id } = getRandomValueFromArray( bookIds )
+
+			const book = new BookForDisplay( id )
+
+			await book.populateAttributes()
+
+			return book
+		}
 	}
 
 
@@ -65,6 +83,5 @@ export class Bookkeeper {
 			return false
 		}
 	}
-
 
 }
