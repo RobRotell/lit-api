@@ -54,5 +54,8 @@
 		"node": {
 			"tryExtensions": [".ts", ".d.ts", ".mjs"]
 		}
+	},
+	"env": {
+		"node": true
 	}
 }
