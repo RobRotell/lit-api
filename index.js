@@ -1,29 +1,20 @@
-/* global process, console */
-
-
 import 'dotenv/config'
 import Hapi from '@hapi/hapi'
-import inert from '@hapi/inert'
 
 
 // routes
-import { routeCreateBook } from './src/routes/create-book.js'
 import { routeGetBook } from './src/routes/get-book.js'
 import { routeGetRandomBook } from './src/routes/get-random-book.js'
-import { routePublicFiles } from './src/routes/public-files.js'
+import { routeCreateBook } from './src/routes/create-book.js'
 
 
 const init = async () => {
 
 	const server = Hapi.server({
-		host: 'localhost',
+		host: '127.0.0.1',
 		port: process.env.PORT,
 	})
 
-	// needed to serve public files
-	await server.register( inert )
-
-	server.route( routePublicFiles )
 	server.route( routeGetBook )
 	server.route( routeGetRandomBook )
 	server.route( routeCreateBook )
