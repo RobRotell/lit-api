@@ -1,10 +1,8 @@
 import { PrismaClient } from '@prisma/client'
+import { Client } from '../abstracts/Client.js'
 
 
-export class Database {
-
-
-	static #client = null
+export class Database extends Client {
 
 
 	/**
@@ -12,24 +10,11 @@ export class Database {
 	 *
 	 * @return {void}
 	 */
-	static #createClient() {
-		if ( null === Database.#client ) {
-			Database.#client = new PrismaClient()
+	static createClient() {
+		if ( null === this.client ) {
+			this.client = new PrismaClient()
 		}
 	}
 
-
-	/**
-	 * Get Prisma client instance
-	 *
-	 * @return {Object} Prisma client
-	 */
-	static getClient() {
-		if ( !Database.#client ) {
-			Database.#createClient()
-		}
-
-		return Database.#client
-	}
 
 }
