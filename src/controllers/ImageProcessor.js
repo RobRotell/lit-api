@@ -1,9 +1,7 @@
 import got from 'got'
 import sharp from 'sharp'
-import path from 'path'
-
-
-const imageDirPath = path.join( path.resolve(), 'public/img/covers' )
+import { publicBasePath } from '../constants/paths.js'
+import { Logger } from './Logger.js'
 
 
 export class ImageProcessor {
@@ -36,7 +34,19 @@ export class ImageProcessor {
 			this.baseImageUrl = urlObj.toString()
 
 		} catch ( err ) {
-			throw new Error( 'Argument must be a wellformed URL.' )
+			const errMessage = 'Argument must be a wellformed URL'
+
+			Logger.logError({
+				error: errMessage,
+				context: {
+					action: 'create image processor',
+					args: {
+						url
+					},
+					thrown: err,
+				}
+			})
+			throw new Error( errMessage )
 		}
 
 		this.baseImageName = baseName
@@ -89,7 +99,7 @@ export class ImageProcessor {
 	 * @return {void}
 	 */
 	async saveOriginalImage( sharpStream ) {
-		this.originalJpegFilePath = `${imageDirPath}/${this.baseImageName}.jpg`
+		this.originalJpegFilePath = `${publicBasePath}/${this.baseImageName}.jpg`
 
 		await sharpStream
 			.clone()
@@ -115,9 +125,9 @@ export class ImageProcessor {
 
 		this.jpegFilePaths = new Map(
 			[
-				[ 1024, `${imageDirPath}/${this.baseImageName}-1024x1024.jpg` ],
-				[ 768, `${imageDirPath}/${this.baseImageName}-768x768.jpg` ],
-				[ 480, `${imageDirPath}/${this.baseImageName}-480x480.jpg` ],
+				[ 1024, `${publicBasePath}/${this.baseImageName}-1024x1024.jpg` ],
+				[ 768, `${publicBasePath}/${this.baseImageName}-768x768.jpg` ],
+				[ 480, `${publicBasePath}/${this.baseImageName}-480x480.jpg` ],
 			]
 		)
 
@@ -150,9 +160,9 @@ export class ImageProcessor {
 
 		this.webpFilePaths = new Map(
 			[
-				[ 1024, `${imageDirPath}/${this.baseImageName}-1024x1024.webp` ],
-				[ 768, `${imageDirPath}/${this.baseImageName}-768x768.webp` ],
-				[ 480, `${imageDirPath}/${this.baseImageName}-480x480.webp` ],
+				[ 1024, `${publicBasePath}/${this.baseImageName}-1024x1024.webp` ],
+				[ 768, `${publicBasePath}/${this.baseImageName}-768x768.webp` ],
+				[ 480, `${publicBasePath}/${this.baseImageName}-480x480.webp` ],
 			]
 		)
 
@@ -185,9 +195,9 @@ export class ImageProcessor {
 
 		this.avifFilePaths = new Map(
 			[
-				[ 1024, `${imageDirPath}/${this.baseImageName}-1024x1024.avif` ],
-				[ 768, `${imageDirPath}/${this.baseImageName}-768x768.avif` ],
-				[ 480, `${imageDirPath}/${this.baseImageName}-480x480.avif` ],
+				[ 1024, `${publicBasePath}/${this.baseImageName}-1024x1024.avif` ],
+				[ 768, `${publicBasePath}/${this.baseImageName}-768x768.avif` ],
+				[ 480, `${publicBasePath}/${this.baseImageName}-480x480.avif` ],
 			]
 		)
 

@@ -1,4 +1,3 @@
-/* global console */
 /* eslint-disable max-len */
 import dayjs from 'dayjs'
 import { Book } from '../abstracts/Book.js'
@@ -14,6 +13,7 @@ import { convertPathToUrl } from '../utils/convertPathToUrl.js'
 import { generateRandomYear } from '../utils/generateYear.js'
 import { hashValue } from '../utils/hashValue.js'
 import { stripLeadingAndTrailingQuotes } from '../utils/stripQuotes.js'
+import { Logger } from '../controllers/Logger.js'
 
 
 export class NewBook extends Book {
@@ -42,11 +42,15 @@ export class NewBook extends Book {
 			const prompts = this.createPrompts()
 			const { characters, genre, imageStyle, nationality, plot } = prompts
 
+			const title = await this.createTitle( genre, plot, characters )
+			const author = await this.createAuthor( nationality )
+			const tagline = await this.createTagline( genre, plot, characters )
+
 			// generate basic book data
 			this
-				.setAttribute( 'title', await this.createTitle( genre, plot, characters ) )
-				.setAttribute( 'author', await this.createAuthor( nationality ) )
-				.setAttribute( 'tagline', await this.createTagline( genre, plot, characters ) )
+				.setAttribute( 'title', title )
+				.setAttribute( 'author', author )
+				.setAttribute( 'tagline', tagline )
 
 			// let's save these values to DB for later reference
 			this
@@ -59,7 +63,9 @@ export class NewBook extends Book {
 			// now, let's save and format that image
 			const imageProcessor = new ImageProcessor(
 				openAiImageUrl,
-				hashValue( `${this.date} - ${JSON.stringify( this.prompts )}` )
+				hashValue(
+					`${this.getAttribute( 'date' )} - ${JSON.stringify( this.getAttribute( 'prompts' ) )}`
+				)
 			)
 
 			// image processor will download image and create JPEG (among other formats) files
@@ -79,9 +85,17 @@ export class NewBook extends Book {
 			return bookId
 
 		} catch( err ) {
-			throw new Error( 'Something went wrong creating a book!', {
-				cause: err
+			const errMessage = 'Something went wrong creating a book!'
+
+			Logger.logError({
+				error: errMessage,
+				context: {
+					action: 'create book',
+					thrown: err,
+				}
 			})
+
+			throw new Error( errMessage )
 		}
 	}
 
@@ -151,8 +165,17 @@ export class NewBook extends Book {
 			return stripLeadingAndTrailingQuotes( title )
 
 		} catch ( err ) {
-			console.warn( err )
-			throw new Error( 'Failed to create book title.' )
+			const errMessage = 'Failed to create book title'
+
+			Logger.logError({
+				err: errMessage,
+				context: {
+					action: 'create title',
+				},
+				thrown: err,
+			})
+
+			throw new Error( errMessage )
 		}
 	}
 
@@ -172,8 +195,17 @@ export class NewBook extends Book {
 			return await OpenAi.generateChatCompletion( prompt )
 
 		} catch ( err ) {
-			console.warn( err )
-			throw new Error( 'Failed to create book author.' )
+			const errMessage = 'Failed to create book author'
+
+			Logger.logError({
+				err: errMessage,
+				context: {
+					action: 'create author name',
+					thrown: err,
+				}
+			})
+
+			throw new Error( errMessage )
 		}
 	}
 
@@ -201,8 +233,17 @@ export class NewBook extends Book {
 			return stripLeadingAndTrailingQuotes( tagline )
 
 		} catch ( err ) {
-			console.warn( err )
-			throw new Error( 'Failed to create book tagline.' )
+			const errMessage = 'Failed to create book tagline'
+
+			Logger.logError({
+				err: errMessage,
+				context: {
+					action: 'create tagline',
+					thrown: err,
+				}
+			})
+
+			throw new Error( errMessage )
 		}
 	}
 
@@ -227,8 +268,17 @@ export class NewBook extends Book {
 			return await OpenAi.generateImage( prompt )
 
 		} catch ( err ) {
-			console.warn( err )
-			throw new Error( 'Failed to create book cover image.' )
+			const errMessage = 'Failed to create book cover image'
+
+			Logger.logError({
+				err: errMessage,
+				context: {
+					action: 'create image',
+					thrown: err,
+				}
+			})
+
+			throw new Error( errMessage )
 		}
 	}
 

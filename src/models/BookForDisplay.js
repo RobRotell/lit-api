@@ -1,6 +1,7 @@
 import dayjs from 'dayjs'
 import { Book } from '../abstracts/Book.js'
 import { Database } from '../clients/Database.js'
+import { Logger } from '../controllers/Logger.js'
 
 
 export class BookForDisplay extends Book {
@@ -34,7 +35,19 @@ export class BookForDisplay extends Book {
 		})
 
 		if( !record ) {
-			throw new Error( 'No book matches provided ID.' )
+			const errMessage = 'No book matches provided ID'
+
+			Logger.logError({
+				error: errMessage,
+				context: {
+					action: 'populate book attributes',
+					args: {
+						id: this.getAttribute( 'id' ),
+					}
+				}
+			})
+
+			throw new Error( errMessage )
 		}
 
 		const {

@@ -2,6 +2,7 @@ import { Database } from '../clients/Database.js'
 import { NewBook } from '../models/NewBook.js'
 import { getRandomValueFromArray } from '../utils/getRandomValue.js'
 import { BookForDisplay } from '../models/BookForDisplay.js'
+import { Logger } from './Logger.js'
 
 
 export class Bookkeeper {
@@ -80,6 +81,14 @@ export class Bookkeeper {
 
 		// book doesn't exist
 		} catch ( err ) {
+			Logger.logError({
+				error: 'Failed to get book by ID',
+				context: {
+					action: 'get book by ID',
+					thrown: err,
+				}
+			})
+
 			return false
 		}
 	}
