@@ -1,7 +1,4 @@
-import path from 'path'
-
-
-const basePath = path.resolve()
+import { publicBasePath } from '../constants/paths.js'
 
 
 /**
@@ -11,5 +8,5 @@ const basePath = path.resolve()
  * @return {string} URL
  */
 export const convertPathToUrl = targetPath => {
-	return targetPath.replace( `${basePath}/public`, process.env.APP_URL )
+	return targetPath.replace( `${publicBasePath}`, process.env.APP_URL )
 }
